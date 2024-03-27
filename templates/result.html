@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Recommendations Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Your Personalized Meal Recommendations</h1>
+        {% if recommendations %}
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Recipe Name</th>
+                            <th>Cuisine</th>
+                            <th>Diet</th>
+                            <th>Calories</th>
+                            <th>Health Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for recommendation in recommendations %}
+                            <tr>
+                                <td>{{ recommendation.Recipe_name }}</td>
+                                <td>{{ recommendation.Cuisine_type }}</td>
+                                <td>{{ recommendation.Diet_type }}</td>
+                                <td>{{ recommendation.TotalCalories }}</td>
+                                <td>{{ recommendation.HealthGrade }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No recommendations found. Please adjust your preferences and try again.</p>
+        {% endif %}
+        <a href="/">Go back</a>
+    </div>
+</body>
+</html>
