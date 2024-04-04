@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-import personalized_meal_recommendations as recommender
+import personalised_meal_recommendations as recommender
 
 app = Flask(__name__)
 
