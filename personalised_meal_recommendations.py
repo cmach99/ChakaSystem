@@ -2,7 +2,8 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 import numpy as np
 import tensorflow as tf
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split,KFold
+
 import os
 import logging
 import warnings
@@ -43,7 +44,15 @@ def get_recommendations(weight, height, age, gender, activity_level, goal, prefe
     X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
 
     # Model training
-    model.fit(X_train, y_train, epochs=50, batch_size=16, validation_split=0.2, verbose=0)
+    kf = KFold(n_splits=5, shuffle=True, random_state=42)
+    for train_index, val_index in kf.split(X_train):
+        X_train_fold, X_val_fold = X_train[train_index], X_train[val_index]
+        y_train_fold, y_val_fold = y_train.iloc[train_index], y_train.iloc[val_index]
+    model.fit(X_train_fold, y_train_fold, epochs=50, batch_size=16, validation_data=(X_val_fold, y_val_fold), verbose=0)
+   
+    # Model evaluation
+    loss, accuracy = model.evaluate(X_test, y_test, verbose=1)
+    print(f'Test Accuracy: {accuracy * 100:.2f}%')
 
     # BMR and daily calorie needs calculation
     bmr, daily_calories = calculate_calories(weight, height, age, gender, activity_level, goal)
